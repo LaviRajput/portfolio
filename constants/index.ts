@@ -119,10 +119,7 @@ export const Socials = [
     name: "LeetCode",
     src: "/leetcode.svg",
   },
-  {
-    name: "Instagram",
-    src: "/instagram.svg",
-  },
+
 
 ];
 export const Projects = [
