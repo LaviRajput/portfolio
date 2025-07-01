@@ -1,54 +1,83 @@
 "use client"
-import React, { useState } from 'react'
-import {motion} from 'framer-motion'
+import React, { useState } from "react"
+import { motion } from "framer-motion"
 
 interface Props {
-    image: string;
-    title: string;
-    text: string;
+  image: string
+  title: string
+  text: string
 }
 
-const ProjectCard = ({ image, title, text}: Props) => {
-    const [isFlipped, setIsFlipped] = useState(false)
-    const [isAnimating, setIsAnimating] = useState(false)
+const ProjectCard = ({ image, title, text }: Props) => {
+  const [isFlipped, setIsFlipped] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
 
-    function handleFlip() {
-        if(!isAnimating) {
-            setIsFlipped(!isFlipped)
-            setIsAnimating(true)
-        }
+  function handleFlip() {
+    if (!isAnimating) {
+      setIsFlipped(!isFlipped)
+      setIsAnimating(true)
     }
+  }
+
   return (
     <div
-    onClick={handleFlip}
-    className='w-[450px] h-[280px] rounded-md cursor-pointer'>
-        <motion.div
-        className='flip-card-inner w-full h-full'
+      onClick={handleFlip}
+      className="w-[350px] h-[250px] cursor-pointer perspective-1000"
+    >
+      <motion.div
+        className="relative w-full h-full"
         initial={false}
-        animate={{rotateY: isFlipped ? 180 : 360}}
-        transition={{ duration: 0.6, animationDirection: 'normal'}}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.8 }}
         onAnimationComplete={() => setIsAnimating(false)}
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {/* Front */}
+        <div
+          style={{
+            backgroundImage: `url(${image})`,
+          }}
+          className="absolute inset-0 bg-cover bg-center rounded-2xl overflow-hidden"
         >
-            <div
-            style={{backgroundImage: `url(${image})`}}
-            className='w-full h-full group relative flip-card-front bg-cover bg-center text-white rounded-lg p-4'>
-                    <div  className='absolute inset-0 w-full h-full rounded-md bg-black opacity-0 group-hover:opacity-40'/>
-                    <div className='absolute inset-0 w-full h-full text-[20px] pb-10 hidden group-hover:flex items-center z-[20] justify-center'>
-                    Learn more &gt;
-                    </div>
-            </div>
-            <div
-            style={{backgroundImage: `url(${image})`}}
-            className='w-full h-full group relative flip-card-back bg-cover bg-center text-white rounded-lg p-4'>
-                    <div  className='absolute inset-0 w-full h-full rounded-md bg-black opacity-50 z-[-1]'/>
-                  <div className='flex flex-col gap-20 py-3 z-[30]'>
-                    <h1 className='text-whote text-2xl font-semibold'>{title}</h1>
-                    <p className='text-gray-200 text-[20px]'>
-                        {text}
-                    </p>
-                  </div>
-            </div>
-        </motion.div>
+          {/* Project Title as <a> tag, only on front */}
+          {!isFlipped && (
+            <a
+              href="#"
+              className="absolute top-4 left-4 right-4 z-10 text-xl font-bold text-white rounded px-3 py-1 hover:underline transition-all duration-200"
+              style={{
+                background: 'rgba(30, 41, 59, 0.65)',
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
+              }}
+              tabIndex={0}
+              aria-label={`Project: ${title}`}
+            >
+              {title}
+            </a>
+          )}
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl flex items-center justify-center transition-opacity duration-300 opacity-0 hover:opacity-100">
+            <span className="text-lg font-medium text-white">Learn more &gt;</span>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div
+          style={{
+            backgroundImage: `url(${image})`,
+            transform: "rotateY(180deg)",
+            backfaceVisibility: "hidden",
+          }}
+          className="absolute inset-0 bg-cover bg-center rounded-2xl overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-black/60 rounded-2xl" />
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl flex flex-col p-5 justify-between">
+            <h1 className="text-xl font-bold text-white">{title}</h1>
+            <p className="text-gray-200 text-sm">{text}</p>
+          </div>
+        </div>
+      </motion.div>
     </div>
   )
 }
